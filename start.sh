@@ -1,17 +1,11 @@
 #!/bin/bash
 
 # Start the task getting service in the background
-
-
-
-python pull-service.py &
+python main.py &
 FILE1_PID=$!
 
-
 # Start rest endpoint for health in foreground
-
 python app.py
-
 
 cleanup() {
     echo "Stopping services..."
@@ -19,14 +13,12 @@ cleanup() {
     exit
 }
 
-
 # Trap termination signals together
 trap cleanup INT TERM
 
-
 while true; do
     if ! kill -0 $FILE1_PID >/dev/null 2>&1; then
-        echo "pull-service.py has exited."
+        echo "main.py has exited."
         exit 1
     fi
     sleep 1

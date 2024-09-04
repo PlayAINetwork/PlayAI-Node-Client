@@ -7,3 +7,4 @@ pytz==2024.1
 eth_account==0.11.2
 psutil==6.0.0
 docker==7.1.0
+psutil
