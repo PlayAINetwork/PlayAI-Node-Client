@@ -6,6 +6,7 @@ import logging
 from dotenv import load_dotenv
 import logging
 from components.signer import signResponseObject, signResponse
+from inference import fetchModelResponse
 load_dotenv()
 
 def executeCompute(chunk_ID):
@@ -20,17 +21,18 @@ def executeCompute(chunk_ID):
         response = requests.get(api_url, headers=headers)
         if response.status_code == 200:
             data = response.json()
-            s3_url = data.get('s3_url')
-            if not s3_url:
-                logging.error("s3_url not found in API response.")
-                return {'error':'s3_url not found in API response.'}
+            #{'event_id':event_id, 'game_id':game_id,'url':event_url,'modelname':'pubg_mvit_v2/2.0'},
+            fileurl = data.get('url')
+            if not fileurl:
+                logging.error("fileurl not found in API response.")
+                return {'error':'fileurl not found in API response.'}
         else:
             logging.error(f"Failed to fetch data from API. Status code: {response.status_code}")
     except requests.exceptions.RequestException as e:
         logging.error(f"Request to API failed: {str(e)}")
     
     #Call Compute AI here
-    computeResponse = {"accuracy":99,"isPositive":True}
+    computeResponse=fetchModelResponse(data)
     computeSignedResponse = signResponseObject(computeResponse)
     params = {
         'chunk_ID':chunk_ID,
