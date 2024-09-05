@@ -8,7 +8,9 @@ from components.systemInfo import fetchSystemInfo
 load_dotenv()
 
 def register_node():
-    MAIN_SERVER = os.getenv('MAIN_SERVER')
+    #skipping registration for now
+    return True
+    '''MAIN_SERVER = os.getenv('MAIN_SERVER')
     api_url = f"{MAIN_SERVER}/register"
     headers = {"Content-Type": "application/json"}
     token_id = os.getenv('NODE_TOKEN_ID')
@@ -41,5 +43,5 @@ def register_node():
                 logging.info('Node registration unsuccesful')
                 return False
     except requests.exceptions.RequestException as e:
-            return {'error': f'Request failed: {str(e)}'}
+            return {'error': f'Request failed: {str(e)}'}'''
 

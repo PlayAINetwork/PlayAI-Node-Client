@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 import logging
 from components.register import register_node
 from exec.execute import executeCompute
+from exec.inference import fetchModelResponse
 from components.check_env import check_env_variables
 load_dotenv()
 
@@ -30,10 +31,17 @@ for handler in logging.root.handlers:
     handler.addFilter(ExcludeJobLogFilter())
 
 def pollServer():
+    logging.info("Polling Server")
     NODE_TOKEN_ID = os.getenv('NODE_TOKEN_ID')
     MAIN_SERVER = os.getenv('MAIN_SERVER')
     api_url = f"{MAIN_SERVER}/chunks/{NODE_TOKEN_ID}"
     headers = {"Content-Type": "application/json"}
+    '''fetchModelResponse({
+    "game_id":"1",
+    "event_id":"1",
+    "url": "s3://playai-cv-video-filter-prod/data/sample_data/gamecls=MINECRAFT/game_id=1/event_id=1.npy",
+    "model_name":"pubg_mvit_v2/2.0"
+    })'''
     try:
         logging.info("Calling the backend for active tasks")
         response = requests.get(api_url, headers=headers)

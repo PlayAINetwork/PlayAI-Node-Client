@@ -1,9 +1,9 @@
 import requests
 import json
+import logging
 def fetchModelResponse(resData):
-    modelname=resData['modelname']
-    data = json.dumps(resData)
-    res = requests.post(f"http://localhost:8000/check_data",  data={'data':data})#{'data':"s3://playai-cv-video-filter/inference/data/dummy_data/videoplayback (2)_chunk_output_003.pt"})
-    print(res.json())
-    return {"accuracy":99,"isPositive":True}
-    #return res.json()
+    model_name = resData['model_name']
+    response = requests.post(f"http://localhost:8080/predictions/{model_name}", data={'data':json.dumps(resData)})
+    logging.info("Model Response",response.json())
+    #return {"accuracy":99,"isPositive":True}
+    return response.json()
