@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  python-app:
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM python:3.9-slim-buster
+        WORKDIR /app
+        RUN apt-get update && apt-get install -y \
+            gcc \
+            python3-dev \
+            curl \
+            && rm -rf /var/lib/apt/lists/*
+        COPY . .
+        RUN pip install --no-cache-dir -r requirements.txt
+        RUN chmod +x start.sh
+    image: python-app:latest
+    container_name: python-app
+    ports:
+      - "3000:3000"
+    environment:
+      - FLASK_APP=app.py
+      - TORCHSERVE_URL=http://torchserve:8080
+    command: ["/app/start.sh"]
+    depends_on:
+      - torchserve
+
+  torchserve:
+    image: "public.ecr.aws/j7l3n4i5/playai-node-ai-engine-public-test:inference-latest"
+    container_name: torchserve
+    ports:
+      - "8080:8080"
+      - "8181:8181"
+    environment:
+      - MODEL_NAME=pubg_mvit_v2.mar
+    volumes:
+      - ./model_store:/home/model-server/model-store

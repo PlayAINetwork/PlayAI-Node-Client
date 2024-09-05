@@ -6,7 +6,7 @@ import logging
 from dotenv import load_dotenv
 import logging
 from components.signer import signResponseObject, signResponse
-from inference import fetchModelResponse
+from exec.inference import fetchModelResponse
 load_dotenv()
 
 def executeCompute(chunk_ID):
@@ -33,6 +33,7 @@ def executeCompute(chunk_ID):
     
     #Call Compute AI here
     computeResponse=fetchModelResponse(data)
+    print("Prediction",computeResponse)
     computeSignedResponse = signResponseObject(computeResponse)
     params = {
         'chunk_ID':chunk_ID,
