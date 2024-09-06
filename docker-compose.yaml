@@ -31,6 +31,6 @@ services:
       - "8080:8080"
       - "8181:8181"
     environment:
-      - MODEL_NAME=pubg_mvit_v2.mar
+      - MODEL_NAME=pubg_mvit_v3.mar
     volumes:
       - ./model_store:/home/model-server/model-store

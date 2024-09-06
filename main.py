@@ -36,12 +36,6 @@ def pollServer():
     MAIN_SERVER = os.getenv('MAIN_SERVER')
     api_url = f"{MAIN_SERVER}/chunks/{NODE_TOKEN_ID}"
     headers = {"Content-Type": "application/json"}
-    '''fetchModelResponse({
-    "game_id":"1",
-    "event_id":"1",
-    "url": "s3://playai-cv-video-filter-prod/data/sample_data/gamecls=MINECRAFT/game_id=1/event_id=1.npy",
-    "model_name":"pubg_mvit_v2/2.0"
-    })'''
     try:
         logging.info("Calling the backend for active tasks")
         response = requests.get(api_url, headers=headers)
