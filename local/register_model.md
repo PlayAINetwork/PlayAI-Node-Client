@@ -2,7 +2,7 @@
 
 
 ### What is there to test in this 
-1. Verify that list model api return emtry at the launch of service 
+1. Verify that list model api return empty at the launch of service 
 2. Verify that list model api does not return empty post registering a model from signed URL 
 3. Verify that prediction call to the `model_name` and data is able go get the inference results
 
