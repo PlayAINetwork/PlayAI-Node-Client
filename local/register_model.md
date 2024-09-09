@@ -1,5 +1,13 @@
 ### Model Register/ Deregister/ Prediction requests
 
+
+### What is there to test in this 
+1. Verify that list model api return emtry at the launch of service 
+2. Verify that list model api does not return empty post registering a model from signed URL 
+3. Verify that prediction call to the `model_name` and data is able go get the inference results
+
+
+### Setup steps 
 1. `./exec/flask_client.py` file have class `FlaskCustomClient` that have methods
 to register model, list_models, running prediction from different url from flask app 
 2. To understand more about how to register a model first launch the container
