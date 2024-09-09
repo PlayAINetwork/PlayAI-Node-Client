@@ -18,6 +18,8 @@ class TorchserveModelclient:
     def register_a_model(self, model_name,model_url):
         # if model_url.startswith('s3://'):
         #     model_url = self.get_signed_url(model_url)
+        if not model_url.startswith('https://'):
+            raise ValueError(f'please provide the valid signed model URL, current URL {model_url}')
         url = f"{self.management_api_url}/models"
         data = {
             "model_name": model_name,
