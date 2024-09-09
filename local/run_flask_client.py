@@ -6,16 +6,18 @@ if __name__ == '__main__':
     flask_client = FlaskCustomClient(host='localhost')
     print(flask_client.get_list_of_models())
 
-    signed_url = 'https://playai-cv-video-filter-prod.s3.amazonaws.com/model-store/pubg_mvit_v4.mar?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZQ3DRWKCEAJT7U5P%2F20240909%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20240909T094113Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=a93d4e98156b17039486e18a259dbbd432b27e575ad379ebcd33a0f0c2d50c83'
+    model_url = "s3://playai-cv-video-filter-prod/model-store/pubg_mvit_v4.mar"
+    model_name = 'pubg_mvit_v4'
+    model_signed_url = 'https://playai-cv-video-filter-prod.s3.amazonaws.com/model-store/pubg_mvit_v4.mar?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZQ3DRWKCEAJT7U5P%2F20240909%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20240909T094113Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=a93d4e98156b17039486e18a259dbbd432b27e575ad379ebcd33a0f0c2d50c83'
     #please use updated signed url, above url might have expired"
 
-    # try:
-    #     response = flask_client.register_a_model(model_name='pubg_mvit_v4', model_url=signed_url)
-    #     print(response)
-    # except Exception as e:
-    #     print(e)
-    #     pass
-    # print(flask_client.get_list_of_models())
+    try:
+        response = flask_client.register_a_model(model_name=model_name, model_url=model_signed_url)
+        print(response)
+    except Exception as e:
+        print(e)
+        pass
+    print(flask_client.get_list_of_models())
 
 
 
