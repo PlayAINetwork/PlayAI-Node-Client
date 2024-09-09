@@ -29,8 +29,14 @@ if __name__ == '__main__':
         url=signed_url
     )
 
-    response = flask_client.get_prediction(
-        data=request_data,
-        model_name='pubg_mvit_v4'
-    )
+    # response = flask_client.get_prediction(
+    #     data=request_data,
+    #     model_name='pubg_mvit_v4'
+    # )
+    # print(response)
+
+    "Sample request to deregister a models"
+    response = flask_client.de_register_model(model_name='pubg_mvit_v4')
     print(response)
+
+    print(flask_client.get_list_of_models())
