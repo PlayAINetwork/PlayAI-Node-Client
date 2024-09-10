@@ -7,20 +7,25 @@ from dotenv import load_dotenv
 import logging
 from components.signer import signResponseObject, signResponse
 from exec.flask_client import FlaskCustomClient
+from exec.torchserve_model_client import TorchserveModelclient
 from exec.inference import fetchModelResponse
 from components.register_model import registerModel
 load_dotenv()
 
+flask_client = FlaskCustomClient(host='localhost')
+
 def executeCompute(taskInfo):
+    logging.info("Executing Compute on Task")
     MAIN_SERVER = os.getenv('MAIN_SERVER')
     token_id = os.getenv('NODE_TOKEN_ID')
-    model_class = taskInfo['class']
+    model_class = taskInfo['gameClass']
     if not checkModelPresence(model_class):
-        registerModel(model_class)
-    computeResponse=fetchModelResponse(taskInfo['data'])
+        registerModel(taskInfo)
+    checkModelPresence(model_class)
+    computeResponse=fetchModelResponse(taskInfo)
     computeSignedResponse = signResponseObject(computeResponse)
     params = {
-        'task':taskInfo['id'],
+        'task':taskInfo['taskId'],
         'taskResponse':computeResponse,
         'tokenId':token_id,
         'signature':computeSignedResponse
@@ -45,11 +50,16 @@ def executeCompute(taskInfo):
     
 
 def checkModelPresence(model_class):
-    flask_client = FlaskCustomClient(host='localhost')
-    availableModels = flask_client.get_list_of_models()
-    logging.info("Available Models",availableModels)
-    if model_class in availableModels:
-        return True
+    response = flask_client.get_list_of_models()
+    logging.info("List of Models")
+    logging.info(response)
+    if 'models' in response:
+        available_models = response['models']
+        for model in available_models:
+            if model.get('modelName') == model_class:
+                logging.info("Model Found skip register")
+                return True
+    return False
 
 
 
