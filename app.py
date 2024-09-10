@@ -1,5 +1,4 @@
 import json
-
 from flask import Flask, jsonify, request
 import os
 from components.health_check import perform_health_check
