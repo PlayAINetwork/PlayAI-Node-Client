@@ -1,25 +1,24 @@
 from eth_account import Account
-from eth_account.messages import defunct_hash_message
+from eth_account.messages import encode_defunct
 import os
 import json
 from dotenv import load_dotenv
+
 load_dotenv()
 
-def signResponseObject(signResponseJSON):
-    if not isinstance(signResponseJSON, dict):
-            raise ValueError("Input must be a dictionary (JSON object)")
-    json_string = json.dumps(signResponseJSON, sort_keys=True)
-    NODE_SIGNER_KEY = os.getenv('NODE_SIGNER_KEY')
-    msghash = defunct_hash_message(text="\x19Ethereum Signed Message:\n32" + json_string)
-    signedMesaage=Account.signHash(msghash,NODE_SIGNER_KEY)
-    signature=signedMesaage['signature'].hex()
-    return signature
+NODE_SIGNER_KEY = os.getenv('NODE_SIGNER_KEY')
 
-def signResponse(signResponseMessage):
-    message=str(signResponseMessage)
-    NODE_SIGNER_KEY = os.getenv('NODE_SIGNER_KEY')
-    msghash = defunct_hash_message(text="\x19Ethereum Signed Message:\n32" + message)
-    signedMesaage=Account.signHash(msghash,NODE_SIGNER_KEY)
-    signature=signedMesaage['signature'].hex()
-    print(signature)
-    return signature
+def signResponseObject(response_json):
+    if not isinstance(response_json, dict):
+        raise ValueError("Input must be a dictionary (JSON object)")
+    
+    json_string = json.dumps(response_json, sort_keys=True)
+    return signResponse(json_string)
+
+def signResponse(message):
+    if not isinstance(message, str):
+        raise ValueError("Input must be a string")
+    
+    encoded_message = encode_defunct(text=message)
+    signed_message = Account.sign_message(encoded_message, NODE_SIGNER_KEY)
+    return signed_message.signature.hex()
