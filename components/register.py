@@ -12,34 +12,39 @@ def register_node():
     api_url = f"{MAIN_SERVER}/register"
     headers = {"Content-Type": "application/json"}
     token_id = os.getenv('NODE_TOKEN_ID')
-    ip= os.getenv('IP')
-    port = os.getenv('PORT')
-    info=fetchSystemInfo()
-    params = {
-        'NODE_TOKEN_ID':token_id,
-        'NODE_IP':ip,
-        'NODE_PORT':port,
-        "SYSTEM_INFO":info,
-    }
+    #info=fetchSystemInfo()
     signature = signResponseObject(params)
     params['SIGNATURE']=signature
-    #print("Sending Regsitration Info to Server",params)
     try:
-            # Make POST request to /register endpoint
-            response = requests.post(api_url, json=params, headers=headers)
-            # Check if request was successful (status code 200)
-            if response.status_code == 200:
-                 data = response.json()
-                 id = data.get('id')
-                 logging.info('Node regsitration successful')
-                 logging.info(f"Your unique id is : {id}")
-                 return True
-            elif response.status_code == 201:
-                  logging.info('Node Already Linked & Registered')
-                  return True
-            else:
-                logging.info('Node registration unsuccesful')
-                return False
+        # Get nonce from the server
+        nonce_response = requests.get(api_url)
+        if nonce_response.status_code != 200:
+            logging.error(f"Failed to get nonce: {nonce_response.status_code}")
+            return False
+        nonce = nonce_response.json().get('nonce')
+        params = {
+            'id': token_id,
+            "nonce": nonce
+        }
+        signature = signResponseObject(nonce)
+        params['signature'] = signature
+
+        # Make POST request to /register endpoint
+        response = requests.post(api_url, json=params, headers=headers)
+
+        if response.status_code == 200:
+            data = response.json()
+            nodehash = data.get('nodehash')
+            logging.info('Node registration successful')
+            logging.info(f"Your unique id is : {nodehash}")
+            return True
+        elif response.status_code == 201:
+            logging.info('Node Already Linked & Registered')
+            return True
+        else:
+            logging.error(f'Node registration unsuccessful: {response.status_code}')
+            return False
     except requests.exceptions.RequestException as e:
-            return {'error': f'Request failed: {str(e)}'}
+        logging.error(f'Request failed: {str(e)}')
+        return False
 
