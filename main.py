@@ -109,4 +109,4 @@ if __name__ == '__main__':
             pass
     except (KeyboardInterrupt, SystemExit):
         logging.info("Exiting...")
-        #scheduler.shutdown()
+        scheduler.shutdown()
