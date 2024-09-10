@@ -47,6 +47,7 @@ def executeCompute(taskInfo):
 def checkModelPresence(model_class):
     flask_client = FlaskCustomClient(host='localhost')
     availableModels = flask_client.get_list_of_models()
+    logging.info("Available Models",availableModels)
     if model_class in availableModels:
         return True
 
