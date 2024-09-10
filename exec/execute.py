@@ -6,38 +6,23 @@ import logging
 from dotenv import load_dotenv
 import logging
 from components.signer import signResponseObject, signResponse
+from exec.flask_client import FlaskCustomClient
 from exec.inference import fetchModelResponse
+from components.register_model import registerModel
 load_dotenv()
 
-def executeCompute(chunk_ID):
-    # Akthar needs to fillup what the chunk info be
-    NODE_SIGNER_KEY = os.getenv('NODE_SIGNER_KEY')
+def executeCompute(taskInfo):
     MAIN_SERVER = os.getenv('MAIN_SERVER')
-    NODE_WALLET_ADDRESS = os.getenv('NODE_WALLET_ADDRESS')
-    api_url = f"{MAIN_SERVER}/chunkInfo/{chunk_ID}"
-    headers = {"Content-Type": "application/json"}
-    try:
-        logging.info("Getting additional chunk info")
-        response = requests.get(api_url, headers=headers)
-        if response.status_code == 200:
-            data = response.json()
-            #{'event_id':event_id, 'game_id':game_id,'url':event_url,'modelname':'pubg_mvit_v2/2.0'},
-            fileurl = data.get('url')
-            if not fileurl:
-                logging.error("fileurl not found in API response.")
-                return {'error':'fileurl not found in API response.'}
-        else:
-            logging.error(f"Failed to fetch data from API. Status code: {response.status_code}")
-    except requests.exceptions.RequestException as e:
-        logging.error(f"Request to API failed: {str(e)}")
-    
-    #Call Compute AI here
-    computeResponse=fetchModelResponse(data)
-    print("Prediction",computeResponse)
+    token_id = os.getenv('NODE_TOKEN_ID')
+    model_class = taskInfo['class']
+    if not checkModelPresence(model_class):
+        registerModel(model_class)
+    computeResponse=fetchModelResponse(taskInfo['data'])
     computeSignedResponse = signResponseObject(computeResponse)
     params = {
-        'chunk_ID':chunk_ID,
-        'chunkResponse':computeResponse,
+        'task':taskInfo['id'],
+        'taskResponse':computeResponse,
+        'tokenId':token_id,
         'signature':computeSignedResponse
     }
     # if the process was completed, calling the /confrim endpoint in the main function to confrim the task
@@ -57,6 +42,14 @@ def executeCompute(chunk_ID):
             return {'error': f'Request failed: {str(e)}'}
     else:
         return jsonify({'error': 'Signature process failed'}), 500
+    
+
+def checkModelPresence(model_class):
+    flask_client = FlaskCustomClient(host='localhost')
+    availableModels = flask_client.get_list_of_models()
+    if model_class in availableModels:
+        return True
+
 
 
 

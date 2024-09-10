@@ -34,19 +34,19 @@ def pollServer():
     logging.info("Polling Server")
     NODE_TOKEN_ID = os.getenv('NODE_TOKEN_ID')
     MAIN_SERVER = os.getenv('MAIN_SERVER')
-    api_url = f"{MAIN_SERVER}/chunks/{NODE_TOKEN_ID}"
+    api_url = f"{MAIN_SERVER}/tasks/{NODE_TOKEN_ID}"
     headers = {"Content-Type": "application/json"}
     try:
         logging.info("Calling the backend for active tasks")
         response = requests.get(api_url, headers=headers)
         if response.status_code == 200:
             data = response.json()
-            chunk_ID = data.get('chunk_id')
-            if not chunk_ID:
+            taskInfo = data.get('task')
+            if not taskInfo:
                 logging.info("No task assigned at the moment")
                 return
             # Execution is invoked here below
-            result = executeCompute(chunk_ID)
+            result = executeCompute(taskInfo)
             logging.info(f"Result of the task: {result}")
         else:
             logging.error(f"Failed to fetch data from API. Status code: {response.status_code}")

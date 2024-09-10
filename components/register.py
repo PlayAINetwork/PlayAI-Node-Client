@@ -35,7 +35,7 @@ def create_registration_params(nonce):
 def register_node():
     """
     Register the node with the main server.
-    
+
     Returns:
         bool: True if registration is successful, False otherwise.
     """
