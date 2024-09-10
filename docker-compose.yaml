@@ -1,10 +1,10 @@
 services:
-  python-app:
+  playnode:
     build:
       context: .
       dockerfile: Dockerfile
-    image: python-app:latest
-    container_name: python-app
+    image: playnode:latest
+    container_name: playnode
     ports:
       - "3000:3000"
     environment:
