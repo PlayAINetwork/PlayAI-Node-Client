@@ -1,62 +1,93 @@
-from apscheduler.schedulers.background import BackgroundScheduler
-from flask import jsonify
-import requests
 import os
 import logging
+import requests
 from dotenv import load_dotenv
-import logging
-from components.signer import signResponseObject, signResponse
+from flask import jsonify
+from components.signer import signResponseObject
+from components.register_model import register_model
+from exec.flask_client import FlaskCustomClient
 from exec.inference import fetchModelResponse
+
+# Load environment variables
 load_dotenv()
 
-def executeCompute(chunk_ID):
-    # Akthar needs to fillup what the chunk info be
-    NODE_SIGNER_KEY = os.getenv('NODE_SIGNER_KEY')
-    MAIN_SERVER = os.getenv('MAIN_SERVER')
-    NODE_WALLET_ADDRESS = os.getenv('NODE_WALLET_ADDRESS')
-    api_url = f"{MAIN_SERVER}/chunkInfo/{chunk_ID}"
-    headers = {"Content-Type": "application/json"}
-    try:
-        logging.info("Getting additional chunk info")
-        response = requests.get(api_url, headers=headers)
-        if response.status_code == 200:
-            data = response.json()
-            #{'event_id':event_id, 'game_id':game_id,'url':event_url,'modelname':'pubg_mvit_v2/2.0'},
-            fileurl = data.get('url')
-            if not fileurl:
-                logging.error("fileurl not found in API response.")
-                return {'error':'fileurl not found in API response.'}
-        else:
-            logging.error(f"Failed to fetch data from API. Status code: {response.status_code}")
-    except requests.exceptions.RequestException as e:
-        logging.error(f"Request to API failed: {str(e)}")
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+# Initialize Flask client
+flask_client = FlaskCustomClient(host='localhost')
+
+# Environment variables
+MAIN_SERVER = os.getenv('MAIN_SERVER')
+NODE_TOKEN_ID = os.getenv('NODE_TOKEN_ID')
+
+def executeCompute(taskInfo):
+    """
+    Execute the computation task and submit results to the main server.
+    """
+    logging.info("Executing Compute on Task")
+    model_class = taskInfo['gameClass']
     
-    #Call Compute AI here
-    computeResponse=fetchModelResponse(data)
-    print("Prediction",computeResponse)
+    # Ensure model is registered
+    if not checkModelPresence(model_class):
+        register_model(taskInfo)
+        if not checkModelPresence(model_class):
+            logging.error(f"Failed to register model: {model_class}")
+            return jsonify({'error': 'Model registration failed'}), 500
+
+    # Fetch model response
+    computeResponse = fetchModelResponse(taskInfo)
+    logging.info("Compute Response: %s", computeResponse)
+
+    if not computeResponse['isSuccess']:
+        logging.error("Compute failed")
+        return jsonify({'error': 'Computation failed'}), 500
+
+    # Sign the response
     computeSignedResponse = signResponseObject(computeResponse)
-    params = {
-        'chunk_ID':chunk_ID,
-        'chunkResponse':computeResponse,
-        'signature':computeSignedResponse
-    }
-    # if the process was completed, calling the /confrim endpoint in the main function to confrim the task
-    if computeSignedResponse:
-        logging.info("Sending verified task to backend")
-        url = f"{MAIN_SERVER}/confirm"
-        headers = {"Content-Type": "application/json"}
-        try:
-            # Make POST request to /confrim endpoint
-            response = requests.post(url, json=params, headers=headers)
-            # Check if request was successful (status code 200)
-            if response.status_code == 200:
-                return response.json()  
-            else:
-                return {'error': f'Request failed with status code {response.status_code}'}
-        except requests.exceptions.RequestException as e:
-            return {'error': f'Request failed: {str(e)}'}
-    else:
+    if not computeSignedResponse:
+        logging.error("Signature process failed")
         return jsonify({'error': 'Signature process failed'}), 500
 
+    # Prepare parameters for submission
+    params = {
+        "data": {
+            "tokenId": int(NODE_TOKEN_ID),
+            "taskId": taskInfo['taskId'],
+            "inference": computeResponse,
+        },
+        "signature": computeSignedResponse
+    }
 
+    # Submit task to backend
+    return submitTaskToBackend(params)
 
+def checkModelPresence(model_class):
+    """
+    Check if the required model is present in the list of available models.
+    """
+    response = flask_client.get_list_of_models()
+    logging.info("List of Models: %s", response)
+    
+    if 'models' in response:
+        return any(model.get('modelName') == model_class for model in response['models'])
+    return False
+
+def submitTaskToBackend(params):
+    """
+    Submit the task results to the backend server.
+    """
+    logging.info("Sending verified task to backend")
+    url = f"{MAIN_SERVER}/task/submit"
+    headers = {"Content-Type": "application/json"}
+    
+    try:
+        response = requests.post(url, json=params, headers=headers)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            logging.error("Request failed with status code %d", response.status_code)
+            return {'error': f'Request failed with status code {response.status_code}'}
+    except requests.exceptions.RequestException as e:
+        logging.error("Request failed: %s", str(e))
+        return {'error': f'Request failed: {str(e)}'}

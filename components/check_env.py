@@ -9,9 +9,7 @@ def check_env_variables():
         'NODE_WALLET_ADDRESS',
         'NODE_SIGNER_KEY',
         'MAIN_SERVER',
-        'NODE_TOKEN_ID',
-        'IP',
-        'PORT'
+        'NODE_TOKEN_ID'
     ]
 
     missing_vars = []

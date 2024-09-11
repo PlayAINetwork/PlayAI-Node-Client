@@ -31,7 +31,7 @@ def perform_health_check():
             health_status['status'] = 'unhealthy'
 
         # Check if required environment variables are set
-        required_env_vars = ['NODE_WALLET_ADDRESS', 'NODE_SIGNER_KEY', 'MAIN_SERVER', 'NODE_TOKEN_ID', 'IP', 'PORT']
+        required_env_vars = ['NODE_WALLET_ADDRESS', 'NODE_SIGNER_KEY', 'MAIN_SERVER', 'NODE_TOKEN_ID']
         missing_env_vars = [var for var in required_env_vars if not os.getenv(var)]
         health_status['details']['missing_env_vars'] = missing_env_vars
         if missing_env_vars:

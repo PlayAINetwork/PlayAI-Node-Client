@@ -1,19 +1,22 @@
 import requests
 import json
+from exec.flask_client import FlaskCustomClient
 import logging
-def fetchModelResponse(resData):
-    model_name = resData['model_name']
-    events = [
-        {'event_id':resData['event_id'], 'game_id':resData['game_id'],'url':resData['url']}
-    ]
-    response = requests.post(f"http://localhost:8080/predictions/{model_name}", data={'data':json.dumps(events)})
-    print(response.json())
-    logging.info("Model Response",response)
-    return response.json()
 
-'''fetchModelResponse({
-    "game_id":"1",
-    "event_id":"1",
-    "url": "s3://playai-cv-video-filter-prod/data/sample_data/gamecls=MINECRAFT/game_id=1/event_id=1.npy",
-    "model_name":"pubg_mvit_v2/2.0"
-})'''
+flask_client = FlaskCustomClient(host='localhost')
+
+def fetchModelResponse(resData):
+    logging.info("Fetching Response from Model")
+    model_name = resData['modelName']
+    request_data = dict(
+        game_id=resData['gameClass'],
+        event_id=resData['id'],
+        url=resData['data']
+    )
+    response = flask_client.get_prediction(
+         data=request_data,
+         model_name=model_name
+    )
+    logging.info("Model Response")
+    logging.info(response)
+    return response

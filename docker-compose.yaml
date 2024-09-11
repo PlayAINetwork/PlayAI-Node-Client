@@ -1,20 +1,10 @@
 services:
-  python-app:
+  playnode:
     build:
       context: .
-      dockerfile_inline: |
-        FROM python:3.9-slim
-        WORKDIR /app
-        RUN apt-get update && apt-get install -y \
-            gcc \
-            python3-dev \
-            curl \
-            && rm -rf /var/lib/apt/lists/*
-        COPY . .
-        RUN pip install --no-cache-dir -r requirements.txt
-        RUN chmod +x start.sh
-    image: python-app:latest
-    container_name: python-app
+      dockerfile: Dockerfile
+    image: playnode:latest
+    container_name: playnode
     ports:
       - "3000:3000"
     environment:
@@ -26,12 +16,11 @@ services:
 
   torchserve:
     image: "public.ecr.aws/j7l3n4i5/playai-node-ai-engine-public-test:inference-latest"
-    #image uri can be changed to env = prod/test in this curly bracket in url playai-node-ai-engine-public-{env}
     container_name: torchserve
     ports:
       - "8080:8080"
       - "8181:8181"
     environment:
-      - MODEL_NAME=pubg_mvit_v2.mar
-#    volumes:
-#      - ./model_store:/home/model-server/model-store
+      - MODEL_NAME=pubg_mvit_v3.mar
+    volumes:
+      - ./model_store:/home/model-server/model-store
