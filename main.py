@@ -7,7 +7,7 @@ import time
 from dotenv import load_dotenv
 from components.register import register_node
 from exec.execute import executeCompute
-from exec.inference import fetchModelResponse
+from components.task_check import check_task
 from components.check_env import check_env_variables
 import threading
 from queue import Queue
@@ -44,7 +44,6 @@ def process_task():
         task = task_queue.get()
         is_processing = True
         try:
-            # Your existing executeCompute logic here
             result = executeCompute(task)
             logging.info(f"Result of the task: {result}")
         except Exception as e:
@@ -69,25 +68,18 @@ def pollServer():
             "gameClass": "PUBG",
             "modelName": "pubg_mvit_v4"
         })'''
-        NODE_TOKEN_ID = os.getenv('NODE_TOKEN_ID')
-        MAIN_SERVER = os.getenv('MAIN_SERVER')
-        api_url = f"{MAIN_SERVER}/task"
-        headers = {"Content-Type": "application/json"}
-        logging.info("Calling the backend for active tasks")
-        response = requests.get(api_url, headers=headers)
-        if response.status_code == 200:
-            data = response.json()
-            taskInfo = data.get('taskId')
-            if not taskInfo:
-                logging.info("No task assigned at the moment")
-                return
-            # Add the task to the queue
-            task_queue.put(taskInfo)
-            logging.info("Task added to the queue")
-        else:
-            logging.error(f"Failed to fetch data from API. Status code: {response.status_code}")
+        taskdata = check_task()
+        logging.info(taskdata)
+        if taskdata['task'] == 'null':
+            logging.info("No Task Assigned")
+            return
+        logging.info("Task Recieved")
+        logging.info(taskdata['task'])
+        task_queue.put(taskdata['task'])
+        logging.info("Task added to the queue")
+
     except requests.exceptions.RequestException as e:
-        logging.error(f"Request to API failed: {str(e)}")
+        logging.error(f"Task Query Failed {str(e)}")
 
 if __name__ == '__main__':
     if not check_env_variables():
@@ -98,8 +90,7 @@ if __name__ == '__main__':
         logging.info("Node Registered")
     else:
         exit()
-    
-    time.sleep(30)
+
     scheduler = BackgroundScheduler(timezone='UTC')
     scheduler.add_job(pollServer, 'interval', minutes=0.5)
     scheduler.start()

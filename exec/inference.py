@@ -10,7 +10,7 @@ def fetchModelResponse(resData):
     model_name = resData['modelName']
     request_data = dict(
         game_id=resData['gameClass'],
-        event_id=resData['taskId'],
+        event_id=resData['id'],
         url=resData['data']
     )
     response = flask_client.get_prediction(
