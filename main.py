@@ -63,11 +63,6 @@ def pollServer():
         return
     
     try:
-        '''executeCompute({"taskId": "56c3643b-cfce-411d-8524-c71359f59658",
-            "data": "https://playai-events-dev.s3.us-east-1.amazonaws.com/preprocess/gamecls%3DPUBG/game_id%3D60861996-6296-4323-9c0c-63ac26d09442/event_id%3D12.npy?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAZQ3DRWKCDZY6SQNH%2F20240910%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240910T143348Z&X-Amz-Expires=604800&X-Amz-Signature=b0fb0b7bfe9e7235e3f65f1f13b6714c3558ef3a155417871559573a22bafebc&X-Amz-SignedHeaders=host&x-id=GetObject",
-            "gameClass": "PUBG",
-            "modelName": "pubg_mvit_v4"
-        })'''
         taskdata = check_task()
         logging.info(taskdata)
         if taskdata['task'] == 'null':

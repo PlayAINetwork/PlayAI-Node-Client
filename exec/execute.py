@@ -27,11 +27,12 @@ def executeCompute(taskInfo):
     """
     logging.info("Executing Compute on Task")
     model_class = taskInfo['gameClass']
+    modelName = taskInfo['modelName']
     
     # Ensure model is registered
-    if not checkModelPresence(model_class):
+    if not checkModelPresence(modelName):
         register_model(taskInfo)
-        if not checkModelPresence(model_class):
+        if not checkModelPresence(modelName):
             logging.error(f"Failed to register model: {model_class}")
             return jsonify({'error': 'Model registration failed'}), 500
 
@@ -70,7 +71,7 @@ def checkModelPresence(model_class):
     logging.info("List of Models: %s", response)
     
     if 'models' in response:
-        return any(model.get('modelName') == model_class for model in response['models'])
+        return any(model_class in model.get('modelName', '') for model in response['models'])
     return False
 
 def submitTaskToBackend(params):
