@@ -27,15 +27,6 @@ if [[ "$answer" != "y" && "$answer" != "Y" ]]; then
     exit 1
 fi
 
-# Function to prompt for input
-get_input() {
-    local prompt="$1"
-    local var_name="$2"
-    
-    read -p "$prompt: " input
-    eval $var_name="$input"
-}
-
 # Install Docker
 echo "Installing Docker..."
 curl -fsSL https://get.docker.com -o get-docker.sh
@@ -65,10 +56,11 @@ cd PlayAI-Node-Client
 
 # Create .env file
 echo "Setting up .env file..."
-get_input "Enter WALLET address" WALLET
-get_input "Enter USER_PRIVATE_KEY" USER_PRIVATE_KEY
-get_input "Enter MAIN_SERVER URL" MAIN_SERVER
-get_input "Enter NFT_TOKEN_ID" NFT_TOKEN_ID
+read -p "Enter WALLET address: " WALLET
+read -p "Enter USER_PRIVATE_KEY: " USER_PRIVATE_KEY
+read -p "Enter MAIN_SERVER URL: " MAIN_SERVER
+read -p "Enter NFT_TOKEN_ID: " NFT_TOKEN_ID
+
 
 # Write to .env file
 cat > .env << EOF
