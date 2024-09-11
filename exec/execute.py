@@ -23,30 +23,32 @@ def executeCompute(taskInfo):
         registerModel(taskInfo)
     checkModelPresence(model_class)
     computeResponse=fetchModelResponse(taskInfo)
-    computeSignedResponse = signResponseObject(computeResponse)
-    params = {
-        'task':taskInfo['taskId'],
-        'taskResponse':computeResponse,
-        'tokenId':token_id,
-        'signature':computeSignedResponse
-    }
-    # if the process was completed, calling the /confrim endpoint in the main function to confrim the task
-    if computeSignedResponse:
-        logging.info("Sending verified task to backend")
-        url = f"{MAIN_SERVER}/confirm"
-        headers = {"Content-Type": "application/json"}
-        try:
-            # Make POST request to /confrim endpoint
-            response = requests.post(url, json=params, headers=headers)
-            # Check if request was successful (status code 200)
-            if response.status_code == 200:
-                return response.json()  
-            else:
-                return {'error': f'Request failed with status code {response.status_code}'}
-        except requests.exceptions.RequestException as e:
-            return {'error': f'Request failed: {str(e)}'}
-    else:
-        return jsonify({'error': 'Signature process failed'}), 500
+    logging.info("Compute Response")
+    logging.info(computeResponse)
+    if computeResponse['isSuccess'] == True:
+        computeSignedResponse = signResponseObject(computeResponse)
+        params = {
+            'task':taskInfo['taskId'],
+            'taskResponse':computeResponse,
+            'tokenId':token_id,
+            'signature':computeSignedResponse
+        }
+        if computeSignedResponse:
+            logging.info("Sending verified task to backend")
+            url = f"{MAIN_SERVER}/task/submit"
+            headers = {"Content-Type": "application/json"}
+            try:
+                # Make POST request to /confrim endpoint
+                response = requests.post(url, json=params, headers=headers)
+                # Check if request was successful (status code 200)
+                if response.status_code == 200:
+                    return response.json()  
+                else:
+                    return {'error': f'Request failed with status code {response.status_code}'}
+            except requests.exceptions.RequestException as e:
+                return {'error': f'Request failed: {str(e)}'}
+        else:
+            return jsonify({'error': 'Signature process failed'}), 500
     
 
 def checkModelPresence(model_class):

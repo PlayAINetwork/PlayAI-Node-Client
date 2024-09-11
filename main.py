@@ -71,7 +71,7 @@ def pollServer():
         })'''
         NODE_TOKEN_ID = os.getenv('NODE_TOKEN_ID')
         MAIN_SERVER = os.getenv('MAIN_SERVER')
-        api_url = f"{MAIN_SERVER}/tasks/{NODE_TOKEN_ID}"
+        api_url = f"{MAIN_SERVER}/task"
         headers = {"Content-Type": "application/json"}
         logging.info("Calling the backend for active tasks")
         response = requests.get(api_url, headers=headers)
