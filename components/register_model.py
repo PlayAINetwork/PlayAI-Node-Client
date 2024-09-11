@@ -10,13 +10,12 @@ from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
-
 # Initialize clients
-flask_client = FlaskCustomClient(host='localhost')
 TORCHSERVE_CLIENT = TorchserveModelclient(host='torchserve')
 
 # Get main server URL from environment variables
 MAIN_SERVER = os.getenv('MAIN_SERVER')
+
 
 def register_model(task_info):
     """
@@ -52,8 +51,10 @@ def register_model(task_info):
         logging.info(f"Current models: {TORCHSERVE_CLIENT.get_list_of_models()}")
 
         # Register the model
-        response = flask_client.register_a_model(model_name=model_name, model_url=model_url)
-        logging.info("New Model Registered Successfully")
+
+        response = TORCHSERVE_CLIENT.register_a_model(model_name=model_name, model_url=model_url)
+        print(response)
+        logging.info(f"New Model Registered Successfully  {response}")
         return True
 
     except requests.RequestException as e:
