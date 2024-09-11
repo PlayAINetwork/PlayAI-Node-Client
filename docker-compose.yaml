@@ -20,7 +20,7 @@ services:
     ports:
       - "8080:8080"
       - "8181:8181"
-    environment:
-      - MODEL_NAME=pubg_mvit_v3.mar
-    volumes:
-      - ./model_store:/home/model-server/model-store
+#    environment:
+#      - MODEL_NAME=pubg_mvit_v3.mar
+#    volumes:
+#      - ./model_store:/home/model-server/model-store
