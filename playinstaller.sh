@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 cat << "EOF"
  _____  _              ___    _ 
 |  __ \| |            / _ \  (_)
@@ -36,12 +35,6 @@ get_input() {
     read -p "$prompt: " input
     eval $var_name="$input"
 }
-
-# Check if script is run with sudo
-if [ "$EUID" -ne 0 ]; then
-  echo "Please run this script with sudo"
-  exit 1
-fi
 
 # Install Docker
 echo "Installing Docker..."
