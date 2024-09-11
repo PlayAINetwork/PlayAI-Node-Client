@@ -54,12 +54,12 @@ def executeCompute(taskInfo):
     params = {
         "data": {
             "tokenId": int(NODE_TOKEN_ID),
-            "taskId": taskInfo['taskId'],
+            "taskId": taskInfo['id'],
             "inference": computeResponse,
         },
         "signature": computeSignedResponse
     }
-
+    logging.info("Submitting Response to Backend %s", params)
     # Submit task to backend
     return submitTaskToBackend(params)
 
@@ -85,7 +85,7 @@ def submitTaskToBackend(params):
     try:
         response = requests.post(url, json=params, headers=headers)
         if response.status_code == 200:
-            return response.json()
+            return True
         else:
             logging.error("Request failed with status code %d", response.status_code)
             return {'error': f'Request failed with status code {response.status_code}'}
