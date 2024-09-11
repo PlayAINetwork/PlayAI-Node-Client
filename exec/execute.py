@@ -40,7 +40,7 @@ def executeCompute(taskInfo):
     computeResponse = fetchModelResponse(taskInfo)
     logging.info("Compute Response: %s", computeResponse)
 
-    if not computeResponse['isSuccess']:
+    if not computeResponse['IsSuccess']:
         logging.error("Compute failed")
         return jsonify({'error': 'Computation failed'}), 500
 
