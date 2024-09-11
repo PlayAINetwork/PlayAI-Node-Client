@@ -7,6 +7,7 @@ from components.signer import signResponseObject
 from components.register_model import register_model
 from exec.flask_client import FlaskCustomClient
 from exec.inference import fetchModelResponse
+from app import TORCHSERVE_CLIENT
 
 # Load environment variables
 load_dotenv()
@@ -14,8 +15,6 @@ load_dotenv()
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# Initialize Flask client
-flask_client = FlaskCustomClient(host='localhost')
 
 # Environment variables
 MAIN_SERVER = os.getenv('MAIN_SERVER')
@@ -67,7 +66,7 @@ def checkModelPresence(model_class):
     """
     Check if the required model is present in the list of available models.
     """
-    response = flask_client.get_list_of_models()
+    response = TORCHSERVE_CLIENT.get_list_of_models()
     logging.info("List of Models: %s", response)
     
     if 'models' in response:
