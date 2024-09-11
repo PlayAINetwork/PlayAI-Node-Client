@@ -45,7 +45,7 @@ rm get-docker.sh
 # Install specific version of Docker Compose
 echo "Installing Docker Compose 2.17.2..."
 curl -SL https://github.com/docker/compose/releases/download/v2.17.2/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
-chmod +x /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
 
 # Verify Docker Compose version
 COMPOSE_VERSION=$(docker-compose version --short)
@@ -56,7 +56,7 @@ fi
 
 # Install additional dependencies
 echo "Installing additional dependencies..."
-apt-get update && apt-get install -y git
+sudo apt-get update && apt-get install -y git
 
 # Clone the repository
 echo "Cloning the PlayAI-Node-Client repository..."
@@ -82,7 +82,7 @@ echo ".env file created successfully!"
 
 # Build and start Docker containers
 echo "Building and starting Docker containers..."
-docker-compose up --build -d
+sudo docker-compose up --build -d
 
 cat << "EOF"
  ____           _                ____                      _      _       _ 
