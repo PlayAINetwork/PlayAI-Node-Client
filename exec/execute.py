@@ -53,7 +53,7 @@ def executeCompute(taskInfo):
         }
     }
     # Convert data to a JSON string
-    data_string = json.dumps(data, separators=(',', ':'))
+    data_string = json.dumps(data['data'], separators=(',', ':'))
 
     # Sign the response
     signature = signResponse(data_string)
@@ -92,7 +92,7 @@ def submitTaskToBackend(params):
     
     try:
         response = requests.post(url, json=params, headers=headers)
-        if response.status_code == 200:
+        if response.status_code == 204:
             return True
         else:
             logging.error("Request failed with status code %d", response.status_code)
