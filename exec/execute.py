@@ -1,9 +1,10 @@
 import os
 import logging
 import requests
+import json
 from dotenv import load_dotenv
 from flask import jsonify
-from components.signer import signResponseObject
+from components.signer import signResponse 
 from components.register_model import register_model
 from exec.flask_client import FlaskCustomClient
 from exec.inference import fetchModelResponse
@@ -42,22 +43,30 @@ def executeCompute(taskInfo):
     if not computeResponse['IsSuccess']:
         logging.error("Compute failed")
         return jsonify({'error': 'Computation failed'}), 500
+    
+    # Prepare data for signing
+    data = {
+        "data": {
+            "tokenId": int(NODE_TOKEN_ID),
+            "taskId": taskInfo['id'],
+            "inference": computeResponse,
+        }
+    }
+    # Convert data to a JSON string
+    data_string = json.dumps(data, separators=(',', ':'))
 
     # Sign the response
-    computeSignedResponse = signResponseObject(computeResponse)
-    if not computeSignedResponse:
+    signature = signResponse(data_string)
+    if not signature:
         logging.error("Signature process failed")
         return jsonify({'error': 'Signature process failed'}), 500
 
     # Prepare parameters for submission
     params = {
-        "data": {
-            "tokenId": int(NODE_TOKEN_ID),
-            "taskId": taskInfo['id'],
-            "inference": computeResponse,
-        },
-        "signature": computeSignedResponse
+        **data,
+        "signature": signature
     }
+    
     logging.info("Submitting Response to Backend %s", params)
     # Submit task to backend
     return submitTaskToBackend(params)
