@@ -93,6 +93,7 @@ def submitTaskToBackend(params):
     try:
         response = requests.post(url, json=params, headers=headers)
         if response.status_code == 204:
+            logging.info("Task Submitted to backend successfully")
             return True
         else:
             logging.error("Request failed with status code %d", response.status_code)
