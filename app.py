@@ -1,5 +1,6 @@
 import json
-from flask import Flask, jsonify, request
+import requests
+from flask import Flask, jsonify, request, Response
 import os
 from components.health_check import perform_health_check
 from exec.torchserve_model_client import TorchserveModelclient
@@ -41,6 +42,18 @@ def de_register_torchserve_model():
     data = request.get_json()
     response = TORCHSERVE_CLIENT.de_register_model(model_name=data['model_name'])
     return response
+
+@app.route('/postprocess', methods=['POST'])
+def postprocessing():
+    events = request.get_json()
+    url = "http://postprocessing:8080/2015-03-31/functions/function/invocations"
+    lambda_response = requests.post(url, data=json.dumps(events), headers={"Content-Type": "application/json"})
+    flask_response = Response(
+        lambda_response.content,
+        status=lambda_response.status_code,
+        headers=dict(lambda_response.headers)
+    )
+    return flask_response
 
 
 if __name__ == '__main__':
