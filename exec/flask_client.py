@@ -12,6 +12,7 @@ class FlaskCustomClient:
         self.model_register_api = f"http://{host}:3000/register_model"
         self.deregister_model_url = f"http://{host}:3000/de_register_model"
         self.management_api_url = f'http://{host}:8081'
+        self.postprocess_url = f'http://{host}:3000/postprocess'
 
     def get_prediction_api_url(self):
         prediction_url = f"http://{self.host}:3000/predict"
@@ -51,3 +52,7 @@ class FlaskCustomClient:
     def de_register_model(self, model_name):
         response = requests.post(self.deregister_model_url, json= {'model_name':model_name})
         return response.json()
+
+    def postprocess(self,data):
+        response = requests.post(self.postprocess_url, json=data)
+        return response
