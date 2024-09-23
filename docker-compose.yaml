@@ -5,6 +5,8 @@ services:
       dockerfile: Dockerfile
     image: playnode:latest
     container_name: playnode
+    networks:
+      - internal_net
     ports:
       - "3000:3000"
     environment:
@@ -24,3 +26,20 @@ services:
 #      - MODEL_NAME=pubg_mvit_v3.mar
 #    volumes:
 #      - ./model_store:/home/model-server/model-store
+
+  postprocessing:
+    image: "public.ecr.aws/j7l3n4i5/playai-node-ai-engine-public-test:postprocessing-latest"
+    container_name: postprocessing
+    command:
+      - "postprocess_lambda_function.lambda_handler"
+    networks:
+      - internal_net
+    expose:
+      - "8080"
+#    ports:
+#      - "8080"
+
+
+networks:
+  internal_net:
+    driver: bridge
