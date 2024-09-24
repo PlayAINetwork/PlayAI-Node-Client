@@ -30,7 +30,17 @@ This repository contains a Docker Compose configuration for a client application
 
 ## Setup
 
-### Step 1: Create Environment Variables
+### Step 1: Install or Clone the Repository
+
+You can either use the installer by running the command below:
+
+curl -sL https://raw.githubusercontent.com/PlayAINetwork/PlayAI-Node-Client/refs/heads/dev/playinstaller.sh -o playinstaller.sh && chmod +x playinstaller.sh && ./playinstaller.sh
+
+
+Or clone the repository using the following command:
+
+
+### Step 2: Create Environment Variables
 
 This project requires specific environment variables to be set up. Follow these steps:
 
