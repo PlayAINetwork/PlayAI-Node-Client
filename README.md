@@ -1,4 +1,4 @@
-# README Update
+# README
 
 This repository is responsible for the client that fetches two public images from ECR and runs the containers.
 
