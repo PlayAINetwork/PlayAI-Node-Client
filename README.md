@@ -74,4 +74,3 @@ This command will build the necessary images and start the containers as defined
 ## Notes
 
 - The `postprocessing` service is currently set to expose port `8080` but does not publish it to the host. Adjust as necessary for your use case.
-- Uncomment the environment variables and volumes in the `torchserve` service if needed for your model configuration.
