@@ -34,7 +34,7 @@ This repository contains a Docker Compose configuration for a client application
 
 This project requires specific environment variables to be set up. Follow these steps:
 
-1. Create a file named `.env.schema` in the root directory of your project.
+1. Create a file named `.env` in the root directory of your project.
 2. Add the following content to the `.env.schema` file:
 
    ```envschema
