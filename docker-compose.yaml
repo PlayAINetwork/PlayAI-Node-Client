@@ -9,9 +9,9 @@ services:
     environment:
       - FLASK_APP=app.py
       - TORCHSERVE_URL=http://torchserve:8080
-      - NODE_WALLET_ADDRESS='0xC29657430Dd4a78ef0AA52Ba6D6FAB63b17fB55A'
-      - NODE_SIGNER_KEY='0x74faa7eea8d93f94e932ba7058df5bc4c3eca518c77f80413d28af5dbbdebc24'
-      - MAIN_SERVER="https://node-dev.up.railway.app"
+      - NODE_WALLET_ADDRESS=0xC29657430Dd4a78ef0AA52Ba6D6FAB63b17fB55A
+      - NODE_SIGNER_KEY=0x74faa7eea8d93f94e932ba7058df5bc4c3eca518c77f80413d28af5dbbdebc24
+      - MAIN_SERVER=https://node-dev.up.railway.app
       - NODE_TOKEN_ID=2
     command: ["/app/start.sh"]
     depends_on:
