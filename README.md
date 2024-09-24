@@ -34,17 +34,22 @@ This repository contains a Docker Compose configuration for a client application
 
 You can either use the installer by running the command below:
 
-curl -sL https://raw.githubusercontent.com/PlayAINetwork/PlayAI-Node-Client/refs/heads/dev/playinstaller.sh -o playinstaller.sh && chmod +x playinstaller.sh && ./playinstaller.sh
+```
+curl -sL https://playinstaller.playai.network -o playinstaller.sh && chmod +x playinstaller.sh && ./playinstaller.sh
+ ```
 
 
 Or clone the repository using the following command:
 
+```
+git clone https://github.com/PlayAINetwork/PlayAI-Node-Client.git
+ ```
 
 ### Step 2: Create Environment Variables
 
 This project requires specific environment variables to be set up. Follow these steps:
 
-1. Create a file named `.env` in the root directory of your project.
+1. Create a file named `.env.schema` in the root directory of your project.
 2. Add the following content to the `.env.schema` file:
 
    ```envschema
@@ -84,3 +89,4 @@ This command will build the necessary images and start the containers as defined
 ## Notes
 
 - The `postprocessing` service is currently set to expose port `8080` but does not publish it to the host. Adjust as necessary for your use case.
+- Uncomment the environment variables and volumes in the `torchserve` service if needed for your model configuration.
