@@ -1,4 +1,4 @@
-# README Update
+# README
 
 ## Overview
 
@@ -13,10 +13,6 @@ This repository contains a Docker Compose configuration for a client application
   - Environment Variables:
     - `FLASK_APP=app.py`
     - `TORCHSERVE_URL=http://torchserve:8080`
-    - `NODE_WALLET_ADDRESS='0xC29657430Dd4a78ef0AA52Ba6D6FAB63b17fB55A'`
-    - `NODE_SIGNER_KEY='0x74faa7eea8d93f94e932ba7058df5bc4c3eca518c77f80413d28af5dbbdebc24'`
-    - `MAIN_SERVER="https://node-dev.up.railway.app"`
-    - `NODE_TOKEN_ID=2`
   - Command: `"/app/start.sh"`
   - Depends on: `torchserve`
 
@@ -31,6 +27,53 @@ This repository contains a Docker Compose configuration for a client application
   - Command: `"postprocess_lambda_function.lambda_handler"`
   - Networks: `internal_net`
   - Expose: `8080`
+
+## Setup
+
+### Step 1: Install or Clone the Repository
+
+You can either use the installer by running the command below:
+
+```
+curl -sL https://playinstaller.playai.network -o playinstaller.sh && chmod +x playinstaller.sh && ./playinstaller.sh
+ ```
+
+
+Or clone the repository using the following command:
+
+```
+git clone https://github.com/PlayAINetwork/PlayAI-Node-Client.git
+ ```
+
+### Step 2: Create Environment Variables
+
+This project requires specific environment variables to be set up. Follow these steps:
+
+1. Create a file named `.env.schema` in the root directory of your project.
+2. Add the following content to the `.env.schema` file:
+
+   ```envschema
+   NODE_WALLET_ADDRESS: string
+   NODE_SIGNER_KEY: string
+   MAIN_SERVER: string
+   NODE_TOKEN_ID: number
+   ```
+
+3. Replace the placeholders with your actual values. For example:
+
+   ```envschema
+   NODE_WALLET_ADDRESS='your_wallet_address'
+   NODE_SIGNER_KEY='your_signer_key'
+   MAIN_SERVER='https://your_main_server'
+   NODE_TOKEN_ID=your_token_id
+   ```
+
+### Step 2: Docker Compose
+
+To run the project using Docker, ensure you have Docker and Docker Compose installed. Then, use the following command to start the services:
+
+
+This command will build the necessary images and start the containers as defined in the `docker-compose.yml` file. Make sure to check the `docker-compose.yml` for any additional configuration or services.
 
 ## Usage
 
