@@ -1,6 +1,6 @@
 services:
   playnode:
-    image: public.ecr.aws/j7l3n4i5/client/flask-app:latest
+    image: "public.ecr.aws/j7l3n4i5/client/flask-app-${ENV:-prod}:latest"
     container_name: playnode
     networks:
       - internal_net
@@ -16,7 +16,7 @@ services:
       - torchserve
 
   torchserve:
-    image: "public.ecr.aws/j7l3n4i5/playai-node-ai-engine-public-test:inference-latest"
+    image: "public.ecr.aws/j7l3n4i5/playai-node-ai-engine-public-${ENV:-prod}:inference-latest"
     container_name: torchserve
     networks:
       - internal_net
@@ -26,7 +26,7 @@ services:
 
 
   postprocessing:
-      image: "public.ecr.aws/j7l3n4i5/playai-node-ai-engine-public-test:postprocessing-latest"
+      image: "public.ecr.aws/j7l3n4i5/playai-node-ai-engine-public-${ENV:-prod}:postprocessing-latest"
       container_name: postprocessing
       command:
         - "postprocess_lambda_function.lambda_handler"

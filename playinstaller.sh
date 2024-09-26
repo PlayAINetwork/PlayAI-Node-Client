@@ -68,7 +68,7 @@ echo "Setting up .env file..."
 read -p "Enter WALLET address: " WALLET
 read -p "Enter USER_PRIVATE_KEY: " USER_PRIVATE_KEY
 read -p "Enter MAIN_SERVER URL: " MAIN_SERVER
-read -p "Enter NFT_TOKEN_ID: " NFT_TOKEN_ID
+read -p "Enter NODE_TOKEN_ID: " NODE_TOKEN_ID
 
 # Write to .env file
 sudo_run bash << EOF
@@ -76,13 +76,15 @@ cat > .env << EOT
 WALLET=$WALLET
 USER_PRIVATE_KEY=$USER_PRIVATE_KEY
 MAIN_SERVER=$MAIN_SERVER
-NFT_TOKEN_ID=$NFT_TOKEN_ID
+NODE_TOKEN_ID=$NODE_TOKEN_ID
 EOT
 EOF
 
 echo ".env file created successfully!"
 
 # Build and start Docker containers
+echo "Pulling latest Docker containers..."
+sudo_run docker-compose pull
 echo "Building and starting Docker containers..."
 sudo_run docker-compose up --build -d
 
