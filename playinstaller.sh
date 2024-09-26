@@ -86,7 +86,7 @@ echo ".env file created successfully!"
 echo "Pulling latest Docker containers..."
 sudo_run docker-compose pull
 echo "Building and starting Docker containers..."
-sudo_run docker-compose up --build
+sudo_run docker-compose up --build -d
 
 sudo_run bash << EOF
 cat << "EOT"
