@@ -65,16 +65,16 @@ cd PlayAI-Node-Client
 
 # Create .env file
 echo "Setting up .env file..."
-read -p "Enter WALLET address: " WALLET
-read -p "Enter USER_PRIVATE_KEY: " USER_PRIVATE_KEY
-read -p "Enter MAIN_SERVER URL: " MAIN_SERVER
+read -p "Enter NODE_WALLET_ADDRESS: " NODE_WALLET_ADDRESS
+read -p "Enter NODE_SIGNER_KEY: " NODE_SIGNER_KEY
+read -p "Enter MAIN_SERVER: " MAIN_SERVER
 read -p "Enter NODE_TOKEN_ID: " NODE_TOKEN_ID
 
 # Write to .env file
 sudo_run bash << EOF
 cat > .env << EOT
-NODE_WALLET_ADDRESS=$WALLET
-NODE_SIGNER_KEY=$USER_PRIVATE_KEY
+NODE_WALLET_ADDRESS=$NODE_WALLET_ADDRESS
+NODE_SIGNER_KEY=$NODE_SIGNER_KEY
 MAIN_SERVER=$MAIN_SERVER
 NODE_TOKEN_ID=$NODE_TOKEN_ID
 EOT
