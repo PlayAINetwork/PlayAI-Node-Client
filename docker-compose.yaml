@@ -20,9 +20,12 @@ services:
     container_name: torchserve
     networks:
       - internal_net
-    ports:
-      - "8080:8080"
-      - "8181:8181"
+    expose:
+      - "8080"
+      - "8181"
+#    ports:
+#      - "8080:8080"
+#      - "8181:8181"
 
 
   postprocessing:
