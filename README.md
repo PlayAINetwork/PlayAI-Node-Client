@@ -12,21 +12,23 @@ This repository contains a Docker Compose configuration for a client application
   - Ports: `3000:3000`
   - Environment Variables:
     - `FLASK_APP=app.py`
-    - `TORCHSERVE_URL=http://torchserve:8080`
+    - `TORCHSERVE_PORT=8083`
   - Command: `"/app/start.sh"`
   - Depends on: `torchserve`
 
 - **torchserve**: 
   - Image: `public.ecr.aws/j7l3n4i5/playai-node-ai-engine-public-test:inference-latest`
   - Container Name: `torchserve`
-  - Ports: `8080:8080`, `8181:8181`
+  - environment:
+    - `TORCHSERVE_PORT=8083`
+  - Ports: `8083:8083`, `8084:8084`
 
 - **postprocessing**: 
   - Image: `public.ecr.aws/j7l3n4i5/playai-node-ai-engine-public-test:postprocessing-latest`
   - Container Name: `postprocessing`
   - Command: `"postprocess_lambda_function.lambda_handler"`
   - Networks: `internal_net`
-  - Expose: `8080`
+  - Ports: `8080:8080`
 
 ## Setup
 
@@ -80,13 +82,11 @@ This command will build the necessary images and start the containers as defined
 1. Ensure you have Docker and Docker Compose installed.
 2. Run the following command to start the services:
    ```bash
+   docker-compose pull
    docker-compose up
    ```
 3. Access the services:
    - `playnode`: [http://localhost:3000](http://localhost:3000)
-   - `torchserve`: [http://localhost:8080](http://localhost:8080) and [http://localhost:8181](http://localhost:8181)
+   - `torchserve`: [http://localhost:8083](http://localhost:8080) and [http://localhost:8084](http://localhost:8181)
+   - `postprocessing`: [http://localhost:8080](http://localhost:8080)
 
-## Notes
-
-- The `postprocessing` service is currently set to expose port `8080` but does not publish it to the host. Adjust as necessary for your use case.
-- Uncomment the environment variables and volumes in the `torchserve` service if needed for your model configuration.
