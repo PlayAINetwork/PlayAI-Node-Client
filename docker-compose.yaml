@@ -10,7 +10,7 @@ services:
       - .env
     environment:
       - FLASK_APP=app.py
-      - TORCHSERVE_URL=http://torchserve:8080
+      - TORCHSERVE_PORT=8083
     command: ["/app/start.sh"]
     depends_on:
       - torchserve
@@ -20,12 +20,11 @@ services:
     container_name: torchserve
     networks:
       - internal_net
-    expose:
-      - "8080"
-      - "8181"
-#    ports:
-#      - "8080:8080"
-#      - "8181:8181"
+    environment:
+      - TORCHSERVE_PORT=8083
+    ports:
+      - "8083:8083"          # Bind the inference port
+      - "8084:8084"          # Bind the management port
 
 
   postprocessing:
@@ -35,10 +34,8 @@ services:
         - "postprocess_lambda_function.lambda_handler"
       networks:
         - internal_net
-      expose:
-        - "8080"
-  #    ports:
-  #      - "8080"
+      ports:
+        - "8080:8080"
 
 
 networks:
