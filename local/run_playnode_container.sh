@@ -1,0 +1,2 @@
+docker pull "public.ecr.aws/j7l3n4i5/client/flask-app-test:latest"
+docker run --rm -it -e FLASK_APP=app.py -e TORCHSERVE_PORT=8083 -p 3000:3000 -v ./.env:/app/.env -t "public.ecr.aws/j7l3n4i5/client/flask-app-test:latest"
