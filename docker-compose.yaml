@@ -12,6 +12,7 @@ services:
       - HOST_NAME=localhost #use torchserve if you are running the torchserve container or locally, dont use quotes around name
     depends_on:
       - torchserve
+      - postprocessing
 
   torchserve:
     image: "public.ecr.aws/j7l3n4i5/playai-node-ai-engine-public-${ENV:-prod}:inference-v1.0.0"
