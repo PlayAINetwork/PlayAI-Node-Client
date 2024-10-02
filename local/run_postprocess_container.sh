@@ -1,1 +1,0 @@
-docker run --rm -it -p 8080:8080 -t  "public.ecr.aws/j7l3n4i5/playai-node-ai-engine-public-test:postprocessing-latest" "postprocess_lambda_function.lambda_handler"
