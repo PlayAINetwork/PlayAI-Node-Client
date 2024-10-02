@@ -2,8 +2,8 @@ services:
   playnode:
     image: "public.ecr.aws/j7l3n4i5/client/flask-app-${ENV:-prod}:latest"
     container_name: playnode
-    networks:
-      - internal_net
+#    networks:
+#      - internal_net
     ports:
       - "3000:3000"
     env_file:
@@ -18,10 +18,11 @@ services:
   torchserve:
     image: "public.ecr.aws/j7l3n4i5/playai-node-ai-engine-public-${ENV:-prod}:inference-latest"
     container_name: torchserve
-    networks:
-      - internal_net
+#    networks:
+#      - internal_net
     environment:
       - TORCHSERVE_PORT=8083
+      - HOST_NAME="localhost"
     ports:
       - "8083:8083"          # Bind the inference port
       - "8084:8084"          # Bind the management port
@@ -32,12 +33,12 @@ services:
       container_name: postprocessing
       command:
         - "postprocess_lambda_function.lambda_handler"
-      networks:
-        - internal_net
+#      networks:
+#        - internal_net
       ports:
         - "8080:8080"
 
 
-networks:
-  internal_net:
-    driver: bridge
+#networks:
+#  internal_net:
+#    driver: bridge
