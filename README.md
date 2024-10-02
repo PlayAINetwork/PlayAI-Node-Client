@@ -6,29 +6,22 @@ This repository contains a Docker Compose configuration for a client application
 
 ## Services
 
-- **playnode**: 
-  - Image: `public.ecr.aws/j7l3n4i5/client/flask-app:latest`
-  - Container Name: `playnode`
-  - Ports: `3000:3000`
-  - Environment Variables:
-    - `FLASK_APP=app.py`
-    - `TORCHSERVE_PORT=8083`
-  - Command: `"/app/start.sh"`
-  - Depends on: `torchserve`
+- **Playnode**:
+  - PlayaAI node for pulling task and registering node
+  - Port: 3000
+  - To run service on single Node or local machine change `HOST_NAME=torchserve` 
+    without any quotes in `docker-compose.yml` file
 
-- **torchserve**: 
-  - Image: `public.ecr.aws/j7l3n4i5/playai-node-ai-engine-public-test:inference-latest`
-  - Container Name: `torchserve`
-  - environment:
-    - `TORCHSERVE_PORT=8083`
-  - Ports: `8083:8083`, `8084:8084`
+- **Torchserve**:
+  - Inference service for running machine learning models 
+  - Ports: 8083, 8084 & 8085
 
-- **postprocessing**: 
-  - Image: `public.ecr.aws/j7l3n4i5/playai-node-ai-engine-public-test:postprocessing-latest`
-  - Container Name: `postprocessing`
-  - Command: `"postprocess_lambda_function.lambda_handler"`
-  - Networks: `internal_net`
-  - Ports: `8080:8080`
+- **Postprocessing**: 
+  - Other ML tasks
+  - port: 8080
+
+- More details is there about variable and service in the `docker-compose.yml` file
+
 
 ## Setup
 
