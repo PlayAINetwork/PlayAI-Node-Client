@@ -18,7 +18,6 @@ services:
     container_name: torchserve
     environment:
       - TORCHSERVE_PORT=8083
-      - HOST_NAME="localhost"
     ports:
       - "8083:8083"          # Bind the inference port
       - "8084:8084"          # Bind the management port
