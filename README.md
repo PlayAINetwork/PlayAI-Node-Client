@@ -9,7 +9,7 @@ This repository contains a Docker Compose configuration for a client application
 - **Playnode**:
   - PlayaAI node for pulling task and registering node
   - Port: 3000
-  - To run service on single Node or local machine change `HOST_NAME=torchserve` 
+  - To run service on multinode Node change `HOST_NAME=localhost` 
     without any quotes in `docker-compose.yml` file
 
 - **Torchserve**:
