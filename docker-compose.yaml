@@ -2,8 +2,6 @@ services:
   playnode:
     image: "public.ecr.aws/j7l3n4i5/client/flask-app-${ENV:-prod}:latest"
     container_name: playnode
-#    networks:
-#      - internal_net
     ports:
       - "3000:3000"
     env_file:
@@ -11,6 +9,7 @@ services:
     environment:
       - FLASK_APP=app.py
       - TORCHSERVE_PORT=8083
+      - HOST_NAME="localhost" #use "torchserve" if you are running the torchserve container or locally
     command: ["/app/start.sh"]
     depends_on:
       - torchserve
@@ -18,8 +17,6 @@ services:
   torchserve:
     image: "public.ecr.aws/j7l3n4i5/playai-node-ai-engine-public-${ENV:-prod}:inference-latest"
     container_name: torchserve
-#    networks:
-#      - internal_net
     environment:
       - TORCHSERVE_PORT=8083
       - HOST_NAME="localhost"
@@ -33,12 +30,5 @@ services:
       container_name: postprocessing
       command:
         - "postprocess_lambda_function.lambda_handler"
-#      networks:
-#        - internal_net
       ports:
         - "8080:8080"
-
-
-#networks:
-#  internal_net:
-#    driver: bridge
