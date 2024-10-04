@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mynode-service
+spec:
+  selector:
+    app: mynode
+  ports:
+    - name: postprocessingport
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    - name: playnodeport
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: LoadBalancer

@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mynode-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mynode
+  template:
+    metadata:
+      labels:
+        app: mynode
+    spec:
+      containers:
+      - name: playnode
+        image: public.ecr.aws/j7l3n4i5/client/flask-app-test:v1.0.1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        env:
+        - name: FLASK_APP
+          value: app.py
+        - name: TORCHSERVE_PORT
+          value: "8083"
+        - name: HOST_NAME
+          value: localhost
+        - name: NODE_WALLET_ADDRESS
+          value: some-value
+        - name: NODE_SIGNER_KEY
+          value: some-value
+        - name: MAIN_SERVER
+          value: some-server
+        - name: NODE_TOKEN_ID
+          value: "some-id"
+
+      - name: postprocessing
+        image: public.ecr.aws/j7l3n4i5/playai-node-ai-engine-public-test:postprocessing-latest
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 8080
