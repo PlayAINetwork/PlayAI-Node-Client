@@ -57,10 +57,10 @@ This project requires specific environment variables to be set up. Follow these 
 3. Replace the placeholders with your actual values. For example:
 
    ```envschema
-   NODE_WALLET_ADDRESS='your_wallet_address'
-   NODE_SIGNER_KEY='your_signer_key'
-   MAIN_SERVER='https://your_main_server'
-   NODE_TOKEN_ID=your_token_id
+   NODE_WALLET_ADDRESS='0x0000000000000000000000000000000000000000'
+   NODE_SIGNER_KEY='0x00000000000000000000000000000000000000000000000000000000000'
+   MAIN_SERVER="https://node-api.playai.network"
+   NODE_TOKEN_ID=0
    ```
 
 ### Step 2: Docker Compose
