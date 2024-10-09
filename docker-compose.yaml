@@ -9,7 +9,7 @@ services:
     environment:
       - FLASK_APP=app.py
       - TORCHSERVE_PORT=8083
-      - HOST_NAME=torchserve #use torchserve if you are running the torchserve container or locally, dont use quotes around name
+      - HOST_NAME=torchserve
     depends_on:
       - torchserve
 
