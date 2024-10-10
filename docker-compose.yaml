@@ -1,6 +1,6 @@
 services:
   playnode:
-    image: "public.ecr.aws/j7l3n4i5/client/flask-app-${ENV:-prod}:v1.0.2"
+    image: "public.ecr.aws/j7l3n4i5/client/flask-app-${ENV:-prod}:v1.0.3"
     container_name: playnode
     ports:
       - "3000:3000"
