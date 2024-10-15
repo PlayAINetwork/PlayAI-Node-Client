@@ -50,7 +50,6 @@ This project requires specific environment variables to be set up. Follow these 
    ```envschema
    NODE_WALLET_ADDRESS: string
    NODE_SIGNER_KEY: string
-   MAIN_SERVER: string
    NODE_TOKEN_IDS: string(list of int)
    ```
 
@@ -59,7 +58,6 @@ This project requires specific environment variables to be set up. Follow these 
    ```envschema
    NODE_WALLET_ADDRESS='0x0000000000000000000000000000000000000000'
    NODE_SIGNER_KEY='0x00000000000000000000000000000000000000000000000000000000000'
-   MAIN_SERVER="https://node-api.playai.network"
    NODE_TOKEN_IDS='[0]'
    ```
 
